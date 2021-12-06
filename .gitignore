@@ -1,0 +1,32 @@
+# maven #
+target
+
+logs
+
+# windows #
+Thumbs.db
+
+# Mac #
+.DS_Store
+
+# eclipse #
+.settings
+.project
+.classpath
+.log
+*.class
+
+# idea #
+.idea
+*.iml
+
+# Package Files #
+*.jar
+*.war
+*.ear
+/target
+
+# Blade Boot
+blade-boot/*
+!blade-boot/pom.xml
+!blade-boot/src

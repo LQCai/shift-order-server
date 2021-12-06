@@ -1,0 +1,10 @@
+${AnsiColor.BRIGHT_CYAN} ________  _______   ___       _______   ________      ___    ___
+${AnsiColor.BRIGHT_CYAN}|\   ____\|\  ___ \ |\  \     |\  ___ \ |\   __  \    |\  \  /  /|
+${AnsiColor.BRIGHT_CYAN}\ \  \___|\ \   __/|\ \  \    \ \   __/|\ \  \|\  \   \ \  \/  / /
+${AnsiColor.BRIGHT_CYAN} \ \  \    \ \  \_|/_\ \  \    \ \  \_|/_\ \   _  _\   \ \    / /
+${AnsiColor.BRIGHT_CYAN}  \ \  \____\ \  \_|\ \ \  \____\ \  \_|\ \ \  \\  \|   \/  /  /
+${AnsiColor.BRIGHT_CYAN}   \ \_______\ \_______\ \_______\ \_______\ \__\\ _\ __/  / /
+${AnsiColor.BRIGHT_CYAN}    \|_______|\|_______|\|_______|\|_______|\|__|\|__|\___/ /
+                                                     \|___|/
+
+${AnsiColor.BLUE}:: Celery :: ${spring.application.name}:${AnsiColor.RED}${blade.env}${AnsiColor.BLUE} :: Running SpringBoot ${spring-boot.version} :: ${AnsiColor.BRIGHT_BLACK}
