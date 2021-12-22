@@ -1,0 +1,10 @@
+INSERT INTO `blade_menu`(`id`, `parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES ('1473646415577088006', 1123598815738675201, 'shift_template', '班车管理', 'menu', '/shift/shift_template', 'el-icon-info', 1, 1, 0, 1, NULL, 0);
+INSERT INTO `blade_menu`(`id`, `parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES ('1473646415577088007', '1473646415577088006', 'shift_template_add', '新增', 'add', '/shift/shift_template/add', 'plus', 1, 2, 1, 1, NULL, 0);
+INSERT INTO `blade_menu`(`id`, `parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES ('1473646415577088008', '1473646415577088006', 'shift_template_edit', '修改', 'edit', '/shift/shift_template/edit', 'form', 2, 2, 2, 1, NULL, 0);
+INSERT INTO `blade_menu`(`id`, `parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES ('1473646415577088009', '1473646415577088006', 'shift_template_delete', '删除', 'delete', '/api/shift/shift_template/remove', 'delete', 3, 2, 3, 1, NULL, 0);
+INSERT INTO `blade_menu`(`id`, `parent_id`, `code`, `name`, `alias`, `path`, `source`, `sort`, `category`, `action`, `is_open`, `remark`, `is_deleted`)
+VALUES ('1473646415577088010', '1473646415577088006', 'shift_template_view', '查看', 'view', '/shift/shift_template/view', 'file-text', 4, 2, 2, 1, NULL, 0);
