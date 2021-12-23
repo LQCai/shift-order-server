@@ -5,6 +5,9 @@ import org.celery.shift.vo.ShiftTemplateVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+import java.util.Map;
+
 /**
  * 班次模板表 服务类
  *
@@ -21,5 +24,13 @@ public interface IShiftTemplateService extends BaseService<ShiftTemplate> {
 	 * @return
 	 */
 	IPage<ShiftTemplateVO> selectShiftTemplatePage(IPage<ShiftTemplateVO> page, ShiftTemplateVO shiftTemplate);
+
+	/**
+	 * 导入用户数据
+	 *
+	 * @param list
+	 * @return
+	 */
+	void importShift(List<Map<Integer, Map<Integer, String>>> list);
 
 }
