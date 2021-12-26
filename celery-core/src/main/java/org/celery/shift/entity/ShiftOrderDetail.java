@@ -3,7 +3,10 @@ package org.celery.shift.entity;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springblade.core.mp.base.BaseEntity;
+
+import java.sql.Time;
 import java.time.LocalDate;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
@@ -31,7 +34,7 @@ public class ShiftOrderDetail extends BaseEntity {
      */
     @ApiModelProperty(value = "主键")
     @JsonSerialize(using = ToStringSerializer.class)
-  private Long id;
+    private Long id;
     /**
      * 日班次id
      */
@@ -54,9 +57,16 @@ public class ShiftOrderDetail extends BaseEntity {
      * 日期
      */
     @ApiModelProperty(value = "日期")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private LocalDate date;
+    /**
+     * 开始时间
+     */
+    @ApiModelProperty(value = "开始时间")
+    @DateTimeFormat(pattern = "HH:MM:00")
+    @JsonFormat(timezone = "GMT+8", pattern = "HH:MM:00")
+    private Time startTime;
     /**
      * 预约人id
      */

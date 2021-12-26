@@ -62,6 +62,7 @@ public class OrderServiceImpl implements OrderService {
             setOrderUserId(userId);
             setIntervalId(shiftTemplate.getIntervalId());
             setRemark(remark);
+            setStartTime(shiftTemplate.getStartTime());
         }};
         shiftOrderDetailService.save(shiftOrderDetail);
 

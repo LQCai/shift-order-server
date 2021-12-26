@@ -17,4 +17,5 @@ import io.swagger.annotations.ApiModel;
 public class ShiftOrderDetailVO extends ShiftOrderDetail {
 	private static final long serialVersionUID = 1L;
 
+	private String intervalName;
 }

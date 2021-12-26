@@ -1,10 +1,13 @@
 package org.celery.shift.wrapper;
 
-import lombok.AllArgsConstructor;
+import org.celery.shift.entity.Interval;
+import org.celery.shift.service.IIntervalService;
 import org.springblade.core.mp.support.BaseEntityWrapper;
 import org.springblade.core.tool.utils.BeanUtil;
 import org.celery.shift.entity.ShiftOrderDetail;
 import org.celery.shift.vo.ShiftOrderDetailVO;
+import org.springblade.core.tool.utils.Func;
+import org.springblade.core.tool.utils.SpringUtil;
 
 /**
  * 班车预约详情表包装类,返回视图层所需的字段
@@ -21,6 +24,12 @@ public class ShiftOrderDetailWrapper extends BaseEntityWrapper<ShiftOrderDetail,
 	@Override
 	public ShiftOrderDetailVO entityVO(ShiftOrderDetail shiftOrderDetail) {
 		ShiftOrderDetailVO shiftOrderDetailVO = BeanUtil.copy(shiftOrderDetail, ShiftOrderDetailVO.class);
+		IIntervalService intervalService = SpringUtil.getBean(IIntervalService.class);
+
+		Interval interval = intervalService.getById(shiftOrderDetail.getIntervalId());
+		if (Func.isNotEmpty(interval)) {
+			shiftOrderDetailVO.setIntervalName(interval.getName());
+		}
 
 		return shiftOrderDetailVO;
 	}

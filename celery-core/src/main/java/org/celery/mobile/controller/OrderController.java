@@ -1,5 +1,7 @@
 package org.celery.mobile.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
@@ -8,13 +10,19 @@ import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
 import org.celery.mobile.service.OrderService;
 import org.celery.shift.entity.Interval;
+import org.celery.shift.entity.ShiftOrderDetail;
 import org.celery.shift.entity.ShiftTemplate;
 import org.celery.shift.service.IIntervalService;
+import org.celery.shift.service.IShiftOrderDetailService;
 import org.celery.shift.service.IShiftTemplateService;
 import org.celery.shift.vo.IntervalVO;
+import org.celery.shift.vo.ShiftOrderDetailVO;
 import org.celery.shift.vo.ShiftTemplateVO;
 import org.celery.shift.wrapper.IntervalWrapper;
+import org.celery.shift.wrapper.ShiftOrderDetailWrapper;
 import org.celery.shift.wrapper.ShiftTemplateWrapper;
+import org.springblade.core.mp.support.Condition;
+import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -40,12 +48,13 @@ public class OrderController {
     private final IIntervalService intervalService;
     private final IShiftTemplateService shiftTemplateService;
     private final OrderService orderService;
+    private final IShiftOrderDetailService shiftOrderDetailService;
 
     /**
      * 区间列表
      */
     @GetMapping("/interval-list")
-    @ApiOperationSupport(order = 2)
+    @ApiOperationSupport(order = 1)
     @ApiOperation(value = "分页", notes = "传入interval")
     public R<List<IntervalVO>> intervalList() {
         List<Interval> list = intervalService.list();
@@ -69,7 +78,7 @@ public class OrderController {
      * 预约提交
      */
     @PostMapping("/submit")
-    @ApiOperationSupport(order = 2)
+    @ApiOperationSupport(order = 3)
     @ApiOperation(value = "预约提交")
     public R<Boolean> submit(
             @ApiParam(value = "班次模板id", required = true) Long shiftTemplateId,
@@ -78,5 +87,19 @@ public class OrderController {
             BladeUser bladeUser
     ) {
         return R.status(orderService.submit(shiftTemplateId, date, remark, bladeUser.getUserId()));
+    }
+
+    /**
+     * 班车预约列表
+     */
+    @GetMapping("/record-list")
+    @ApiOperationSupport(order = 4)
+    @ApiOperation(value = "班车预约列表", notes = "传入shiftOrderDetail")
+    public R<IPage<ShiftOrderDetailVO>> recordList(ShiftOrderDetail shiftOrderDetail, Query query, BladeUser bladeUser) {
+        QueryWrapper<ShiftOrderDetail> queryWrapper = Condition.getQueryWrapper(shiftOrderDetail);
+        queryWrapper.lambda().eq(ShiftOrderDetail::getOrderUserId, bladeUser.getUserId());
+        queryWrapper.lambda().orderByDesc(ShiftOrderDetail::getCreateTime);
+        IPage<ShiftOrderDetail> pages = shiftOrderDetailService.page(Condition.getPage(query), queryWrapper);
+        return R.data(ShiftOrderDetailWrapper.build().pageVO(pages));
     }
 }
