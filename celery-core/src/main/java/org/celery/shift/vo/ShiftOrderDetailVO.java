@@ -18,4 +18,10 @@ public class ShiftOrderDetailVO extends ShiftOrderDetail {
 	private static final long serialVersionUID = 1L;
 
 	private String intervalName;
+
+	private String userName;
+
+	private String code;
+
+	private String phone;
 }
