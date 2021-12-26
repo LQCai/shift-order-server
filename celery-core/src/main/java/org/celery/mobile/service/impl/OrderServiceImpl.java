@@ -6,6 +6,7 @@ import org.celery.mobile.service.OrderService;
 import org.celery.shift.entity.ShiftOrder;
 import org.celery.shift.entity.ShiftOrderDetail;
 import org.celery.shift.entity.ShiftTemplate;
+import org.celery.shift.enums.ShiftOrderDetailEnum;
 import org.celery.shift.service.IShiftOrderDetailService;
 import org.celery.shift.service.IShiftOrderService;
 import org.celery.shift.service.IShiftTemplateService;
@@ -43,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
         if (Func.isNotEmpty(shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
                 .eq(ShiftOrderDetail::getShiftId, shiftTemplateId)
                 .eq(ShiftOrderDetail::getOrderUserId, userId)
+                .eq(ShiftOrderDetail::getStatus, ShiftOrderDetailEnum.NORMAL.getStatus())
         ))) {
             throw new ServiceException("请勿重复预约");
         }
@@ -67,5 +69,21 @@ public class OrderServiceImpl implements OrderService {
         shiftOrderDetailService.save(shiftOrderDetail);
 
         return true;
+    }
+
+    @Override
+    public Boolean cancel(Long shiftOrderDetailId, Long userId) {
+        ShiftOrderDetail shiftOrderDetail = shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
+                .eq(ShiftOrderDetail::getId, shiftOrderDetailId)
+                .eq(ShiftOrderDetail::getOrderUserId, userId)
+                .eq(ShiftOrderDetail::getStatus, ShiftOrderDetailEnum.NORMAL.getStatus())
+        );
+        if (Func.isEmpty(shiftOrderDetail)) {
+            throw new ServiceException("您尚未预约");
+        }
+
+        shiftOrderDetail.setStatus(ShiftOrderDetailEnum.CANCEL.getStatus());
+
+        return shiftOrderDetailService.saveOrUpdate(shiftOrderDetail);
     }
 }

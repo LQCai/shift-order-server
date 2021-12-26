@@ -24,4 +24,6 @@ public class ShiftOrderDetailVO extends ShiftOrderDetail {
 	private String code;
 
 	private String phone;
+
+	private String statusName;
 }

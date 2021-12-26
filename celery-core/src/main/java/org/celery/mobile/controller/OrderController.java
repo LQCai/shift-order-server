@@ -12,6 +12,7 @@ import org.celery.mobile.service.OrderService;
 import org.celery.shift.entity.Interval;
 import org.celery.shift.entity.ShiftOrderDetail;
 import org.celery.shift.entity.ShiftTemplate;
+import org.celery.shift.enums.ShiftOrderDetailEnum;
 import org.celery.shift.service.IIntervalService;
 import org.celery.shift.service.IShiftOrderDetailService;
 import org.celery.shift.service.IShiftTemplateService;
@@ -98,8 +99,22 @@ public class OrderController {
     public R<IPage<ShiftOrderDetailVO>> recordList(ShiftOrderDetail shiftOrderDetail, Query query, BladeUser bladeUser) {
         QueryWrapper<ShiftOrderDetail> queryWrapper = Condition.getQueryWrapper(shiftOrderDetail);
         queryWrapper.lambda().eq(ShiftOrderDetail::getOrderUserId, bladeUser.getUserId());
+        queryWrapper.lambda().eq(ShiftOrderDetail::getStatus, ShiftOrderDetailEnum.NORMAL.getStatus());
         queryWrapper.lambda().orderByDesc(ShiftOrderDetail::getCreateTime);
         IPage<ShiftOrderDetail> pages = shiftOrderDetailService.page(Condition.getPage(query), queryWrapper);
         return R.data(ShiftOrderDetailWrapper.build().pageVO(pages));
+    }
+
+    /**
+     * 取消预约
+     */
+    @PostMapping("/cancel")
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "取消预约")
+    public R<Boolean> cancel(
+            @ApiParam(value = "预约id", required = true) Long shiftOrderDetailId,
+            BladeUser bladeUser
+    ) {
+        return R.status(orderService.cancel(shiftOrderDetailId, bladeUser.getUserId()));
     }
 }

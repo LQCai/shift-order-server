@@ -1,6 +1,7 @@
 package org.celery.shift.wrapper;
 
 import org.celery.shift.entity.Interval;
+import org.celery.shift.enums.ShiftOrderDetailEnum;
 import org.celery.shift.service.IIntervalService;
 import org.springblade.core.mp.support.BaseEntityWrapper;
 import org.springblade.core.tool.utils.BeanUtil;
@@ -40,6 +41,7 @@ public class ShiftOrderDetailWrapper extends BaseEntityWrapper<ShiftOrderDetail,
 			shiftOrderDetailVO.setCode(user.getCode());
 			shiftOrderDetailVO.setPhone(user.getPhone());
 		}
+		shiftOrderDetailVO.setStatusName(ShiftOrderDetailEnum.getName(shiftOrderDetail.getStatus()));
 
 		return shiftOrderDetailVO;
 	}

@@ -9,4 +9,6 @@ import java.time.LocalDate;
  */
 public interface OrderService {
     Boolean submit(Long shiftTemplateId, LocalDate date, String remark, Long userId);
+
+    Boolean cancel(Long shiftOrderDetailId, Long userId);
 }
