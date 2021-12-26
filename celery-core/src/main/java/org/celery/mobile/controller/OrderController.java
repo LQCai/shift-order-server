@@ -1,10 +1,12 @@
-package org.celery.mobile;
+package org.celery.mobile.controller;
 
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiParam;
 import lombok.AllArgsConstructor;
+import org.celery.mobile.service.OrderService;
 import org.celery.shift.entity.Interval;
 import org.celery.shift.entity.ShiftTemplate;
 import org.celery.shift.service.IIntervalService;
@@ -13,11 +15,15 @@ import org.celery.shift.vo.IntervalVO;
 import org.celery.shift.vo.ShiftTemplateVO;
 import org.celery.shift.wrapper.IntervalWrapper;
 import org.celery.shift.wrapper.ShiftTemplateWrapper;
+import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -33,6 +39,7 @@ public class OrderController {
 
     private final IIntervalService intervalService;
     private final IShiftTemplateService shiftTemplateService;
+    private final OrderService orderService;
 
     /**
      * 区间列表
@@ -56,5 +63,20 @@ public class OrderController {
                 .eq(ShiftTemplate::getIntervalId, intervalId)
         );
         return R.data(ShiftTemplateWrapper.build().listVO(list));
+    }
+
+    /**
+     * 预约提交
+     */
+    @PostMapping("/submit")
+    @ApiOperationSupport(order = 2)
+    @ApiOperation(value = "预约提交")
+    public R<Boolean> submit(
+            @ApiParam(value = "班次模板id", required = true) Long shiftTemplateId,
+            @ApiParam(value = "预约日期", required = true) @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate date,
+            @ApiParam(value = "预约备注", required = true) String remark,
+            BladeUser bladeUser
+    ) {
+        return R.status(orderService.submit(shiftTemplateId, date, remark, bladeUser.getUserId()));
     }
 }

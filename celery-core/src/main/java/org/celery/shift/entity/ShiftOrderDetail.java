@@ -37,7 +37,19 @@ public class ShiftOrderDetail extends BaseEntity {
      */
     @ApiModelProperty(value = "日班次id")
     @JsonSerialize(using = ToStringSerializer.class)
-    private Long shiftDailyId;
+    private Long shiftOrderId;
+    /**
+     * 班次id
+     */
+    @ApiModelProperty(value = "班次id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long shiftId;
+    /**
+     * 区间id
+     */
+    @ApiModelProperty(value = "区间id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long intervalId;
     /**
      * 日期
      */

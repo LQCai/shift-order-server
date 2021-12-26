@@ -33,13 +33,19 @@ public class ShiftOrder extends BaseEntity {
      */
     @ApiModelProperty(value = "主键")
     @JsonSerialize(using = ToStringSerializer.class)
-  private Long id;
+    private Long id;
     /**
      * 区间id
      */
     @ApiModelProperty(value = "区间id")
     @JsonSerialize(using = ToStringSerializer.class)
     private Long intervalId;
+    /**
+     * 班次id
+     */
+    @ApiModelProperty(value = "班次id")
+    @JsonSerialize(using = ToStringSerializer.class)
+    private Long shiftId;
     /**
      * 车次名
      */
@@ -49,14 +55,14 @@ public class ShiftOrder extends BaseEntity {
      * 日期
      */
     @ApiModelProperty(value = "日期")
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd")
     private LocalDate date;
     /**
      * 开始时间
      */
     @ApiModelProperty(value = "开始时间")
-    @DateTimeFormat(pattern="HH:mm:00")
+    @DateTimeFormat(pattern = "HH:mm:00")
     @JsonFormat(timezone = "GMT+8", pattern = "HH:mm:00")
     private Time startTime;
     /**
