@@ -49,17 +49,24 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("请勿重复预约");
         }
 
-        ShiftOrder shiftOrder = new ShiftOrder() {{
-            setDate(date);
-            setShiftId(shiftTemplateId);
-            setStartTime(shiftTemplate.getStartTime());
-            setIntervalId(shiftTemplate.getIntervalId());
-        }};
-        shiftOrderService.save(shiftOrder);
+        ShiftOrder shiftOrder = shiftOrderService.getOne(Wrappers.<ShiftOrder>lambdaQuery()
+                .eq(ShiftOrder::getShiftId, shiftTemplateId)
+                .eq(ShiftOrder::getDate, date)
+        );
+        if (Func.isEmpty(shiftOrder)) {
+            shiftOrder = new ShiftOrder() {{
+                setDate(date);
+                setShiftId(shiftTemplateId);
+                setStartTime(shiftTemplate.getStartTime());
+                setIntervalId(shiftTemplate.getIntervalId());
+            }};
+            shiftOrderService.save(shiftOrder);
+        }
 
+        ShiftOrder finalShiftOrder = shiftOrder;
         ShiftOrderDetail shiftOrderDetail = new ShiftOrderDetail() {{
             setDate(date);
-            setShiftOrderId(shiftOrder.getId());
+            setShiftOrderId(finalShiftOrder.getId());
             setShiftId(shiftTemplateId);
             setOrderUserId(userId);
             setIntervalId(shiftTemplate.getIntervalId());
