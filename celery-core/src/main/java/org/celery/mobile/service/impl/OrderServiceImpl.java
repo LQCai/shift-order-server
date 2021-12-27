@@ -44,6 +44,7 @@ public class OrderServiceImpl implements OrderService {
         if (Func.isNotEmpty(shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
                 .eq(ShiftOrderDetail::getShiftId, shiftTemplateId)
                 .eq(ShiftOrderDetail::getOrderUserId, userId)
+                .eq(ShiftOrderDetail::getDate, date)
                 .eq(ShiftOrderDetail::getStatus, ShiftOrderDetailEnum.NORMAL.getStatus())
         ))) {
             throw new ServiceException("请勿重复预约");
