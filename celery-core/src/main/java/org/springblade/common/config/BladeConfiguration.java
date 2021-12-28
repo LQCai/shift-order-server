@@ -37,7 +37,7 @@ public class BladeConfiguration implements WebMvcConfigurer {
 		secureRegistry.excludePathPatterns("/blade-auth/**");
 		secureRegistry.excludePathPatterns("/blade-system/menu/auth-routes");
 		secureRegistry.excludePathPatterns("/blade-system/tenant/info");
-		secureRegistry.excludePathPatterns("/mobile-wechat/**");
+		secureRegistry.excludePathPatterns("/common/register");
 		secureRegistry.excludePathPatterns("/doc.html");
 		secureRegistry.excludePathPatterns("/js/**");
 		secureRegistry.excludePathPatterns("/webjars/**");
