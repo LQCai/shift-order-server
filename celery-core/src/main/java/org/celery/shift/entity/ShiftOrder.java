@@ -81,6 +81,16 @@ public class ShiftOrder extends BaseEntity {
     @ApiModelProperty(value = "车型")
     private String model;
     /**
+     * 总预约数
+     */
+    @ApiModelProperty(value = "总预约数")
+    private Integer allOrderCount;
+    /**
+     * 有效预约数
+     */
+    @ApiModelProperty(value = "有效预约数")
+    private Integer activeOrderCount;
+    /**
      * 备注
      */
     @ApiModelProperty(value = "备注")

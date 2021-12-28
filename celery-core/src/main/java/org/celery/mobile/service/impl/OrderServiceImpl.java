@@ -50,36 +50,44 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("请勿重复预约");
         }
 
-        ShiftOrder shiftOrder = shiftOrderService.getOne(Wrappers.<ShiftOrder>lambdaQuery()
-                .eq(ShiftOrder::getShiftId, shiftTemplateId)
-                .eq(ShiftOrder::getDate, date)
-        );
-        if (Func.isEmpty(shiftOrder)) {
-            shiftOrder = new ShiftOrder() {{
-                setDate(date);
-                setShiftId(shiftTemplateId);
-                setStartTime(shiftTemplate.getStartTime());
-                setIntervalId(shiftTemplate.getIntervalId());
-            }};
-            shiftOrderService.save(shiftOrder);
-        }
+        synchronized (ShiftOrder.class) {
+            ShiftOrder shiftOrder = shiftOrderService.getOne(Wrappers.<ShiftOrder>lambdaQuery()
+                    .eq(ShiftOrder::getShiftId, shiftTemplateId)
+                    .eq(ShiftOrder::getDate, date)
+            );
+            if (Func.isEmpty(shiftOrder)) {
+                shiftOrder = new ShiftOrder() {{
+                    setDate(date);
+                    setShiftId(shiftTemplateId);
+                    setStartTime(shiftTemplate.getStartTime());
+                    setIntervalId(shiftTemplate.getIntervalId());
+                    setAllOrderCount(1);
+                    setActiveOrderCount(1);
+                }};
+                shiftOrderService.save(shiftOrder);
+            } else {
+                shiftOrder.setAllOrderCount(shiftOrder.getAllOrderCount() + 1);
+                shiftOrder.setActiveOrderCount(shiftOrder.getActiveOrderCount() + 1);
+            }
 
-        ShiftOrder finalShiftOrder = shiftOrder;
-        ShiftOrderDetail shiftOrderDetail = new ShiftOrderDetail() {{
-            setDate(date);
-            setShiftOrderId(finalShiftOrder.getId());
-            setShiftId(shiftTemplateId);
-            setOrderUserId(userId);
-            setIntervalId(shiftTemplate.getIntervalId());
-            setRemark(remark);
-            setStartTime(shiftTemplate.getStartTime());
-        }};
-        shiftOrderDetailService.save(shiftOrderDetail);
+            ShiftOrder finalShiftOrder = shiftOrder;
+            ShiftOrderDetail shiftOrderDetail = new ShiftOrderDetail() {{
+                setDate(date);
+                setShiftOrderId(finalShiftOrder.getId());
+                setShiftId(shiftTemplateId);
+                setOrderUserId(userId);
+                setIntervalId(shiftTemplate.getIntervalId());
+                setRemark(remark);
+                setStartTime(shiftTemplate.getStartTime());
+            }};
+            shiftOrderDetailService.save(shiftOrderDetail);
+        }
 
         return true;
     }
 
     @Override
+    @Transactional
     public Boolean cancel(Long shiftOrderDetailId, Long userId) {
         ShiftOrderDetail shiftOrderDetail = shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
                 .eq(ShiftOrderDetail::getId, shiftOrderDetailId)
@@ -88,6 +96,12 @@ public class OrderServiceImpl implements OrderService {
         );
         if (Func.isEmpty(shiftOrderDetail)) {
             throw new ServiceException("您尚未预约");
+        }
+
+        synchronized (ShiftOrder.class) {
+            ShiftOrder shiftOrder = shiftOrderService.getById(shiftOrderDetail.getShiftOrderId());
+            shiftOrder.setActiveOrderCount(shiftOrder.getActiveOrderCount() - 1);
+            shiftOrderService.updateById(shiftOrder);
         }
 
         shiftOrderDetail.setStatus(ShiftOrderDetailEnum.CANCEL.getStatus());
