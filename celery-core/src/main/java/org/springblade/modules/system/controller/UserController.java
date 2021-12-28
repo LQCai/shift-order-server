@@ -270,4 +270,22 @@ public class UserController {
 		return R.status(userService.registerGuest(user, oauthId));
 	}
 
+
+	/**
+	 * 审核
+	 */
+	@PostMapping("/review")
+	@ApiOperationSupport(order = 16)
+	@ApiOperation(value = "审核")
+	public R review(@ApiParam(value = "userId集合", required = true) @RequestParam String userIds,
+					@ApiParam(value = "状态", required = true) @RequestParam Integer status) {
+		List<User> userList = new ArrayList<>();
+		for (Long userId: Func.toLongList(userIds)) {
+			userList.add(new User() {{
+				setId(userId);
+				setStatus(status);
+			}});
+		}
+		return R.status(userService.updateBatchById(userList));
+	}
 }
