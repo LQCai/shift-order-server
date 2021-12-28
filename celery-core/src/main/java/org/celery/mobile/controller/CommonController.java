@@ -9,15 +9,14 @@ import org.springblade.core.log.exception.ServiceException;
 import org.springblade.core.tool.api.R;
 import org.springblade.core.tool.utils.DigestUtil;
 import org.springblade.core.tool.utils.Func;
+import org.springblade.modules.system.entity.Param;
 import org.springblade.modules.system.entity.Role;
 import org.springblade.modules.system.entity.User;
 import org.springblade.modules.system.enums.UserStatusEnum;
+import org.springblade.modules.system.service.IParamService;
 import org.springblade.modules.system.service.IRoleService;
 import org.springblade.modules.system.service.IUserService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -34,6 +33,7 @@ public class CommonController {
 
     private final IUserService userService;
     private final IRoleService roleService;
+    private final IParamService paramService;
 
     /**
      * 注册申请
@@ -67,5 +67,21 @@ public class CommonController {
         user.setStatus(UserStatusEnum.APPLYING.getStatus());
 
         return R.status(userService.save(user));
+    }
+
+    /**
+     * 获取班车时刻表
+     */
+    @GetMapping("/shift-table")
+    @ApiOperationSupport(order = 3)
+    @ApiOperation(value = "获取班车时刻表")
+    public R<String> getShiftTable() {
+        Param param = paramService.getOne(Wrappers.<Param>lambdaQuery()
+                .eq(Param::getParamKey, "shift.order.table")
+        );
+        if (Func.isEmpty(param)) {
+            throw new ServiceException("后台配置错误，请联系管理员");
+        }
+        return R.data(param.getParamValue());
     }
 }
