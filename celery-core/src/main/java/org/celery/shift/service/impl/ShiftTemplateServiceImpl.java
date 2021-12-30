@@ -1,9 +1,9 @@
 package org.celery.shift.service.impl;
 
-import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import me.zhyd.oauth.utils.UuidUtils;
 import org.celery.shift.entity.Interval;
 import org.celery.shift.entity.ShiftTemplate;
 import org.celery.shift.service.IIntervalService;
@@ -46,7 +46,7 @@ public class ShiftTemplateServiceImpl extends BaseServiceImpl<ShiftTemplateMappe
 		if (Func.isEmpty(list.get(1))) {
 			throw new ServiceException("导入数据为空");
 		}
-		Map<Integer, String> intervalStringMap = list.get(1).get(1);
+		Map<Integer, String> intervalStringMap = list.get(0).get(0);
 		Map<Integer, Long> intervalIdMap = new HashMap<>();
 		for (int key : intervalStringMap.keySet()) {
 			if (key > 0) {
@@ -65,7 +65,8 @@ public class ShiftTemplateServiceImpl extends BaseServiceImpl<ShiftTemplateMappe
 		for (Map<Integer, Map<Integer, String>> item : list) {
 			log.info(list.indexOf(item) + "");
 			log.info(item.toString());
-			if (list.indexOf(item) > 1) {
+			String lineKey = UuidUtils.getUUID();
+			if (list.indexOf(item) > 0) {
 				Map<Integer, String> lineItem = item.get(list.indexOf(item));
 				for (int key : lineItem.keySet()) {
 					if (key > 0) {
@@ -85,6 +86,7 @@ public class ShiftTemplateServiceImpl extends BaseServiceImpl<ShiftTemplateMappe
 												setIntervalId(intervalId);
 												setStartTime(startTime);
 												setCreateTime(new Date());
+												setBindKey(lineKey);
 												setStatus(BladeConstant.DB_STATUS_NORMAL);
 											}});
 										}

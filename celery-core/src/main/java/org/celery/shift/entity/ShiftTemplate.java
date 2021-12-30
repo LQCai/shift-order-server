@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import org.springblade.core.mp.base.BaseEntity;
 
 import java.sql.Time;
+
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import io.swagger.annotations.ApiModel;
@@ -32,7 +33,7 @@ public class ShiftTemplate extends BaseEntity {
      */
     @ApiModelProperty(value = "主键")
     @JsonSerialize(using = ToStringSerializer.class)
-  private Long id;
+    private Long id;
     /**
      * 区间id
      */
@@ -45,9 +46,14 @@ public class ShiftTemplate extends BaseEntity {
     @ApiModelProperty(value = "车次名")
     private String name;
     /**
+     * 关联键（用于绑定班车司机一轮循环）
+     */
+    @ApiModelProperty(value = "关联键")
+    private String bindKey;
+    /**
      * 开始时间
      */
-    @DateTimeFormat(pattern="HH:mm:00")
+    @DateTimeFormat(pattern = "HH:mm:00")
     @JsonFormat(timezone = "GMT+8", pattern = "HH:mm:00")
     @ApiModelProperty(value = "开始时间")
     private Time startTime;
