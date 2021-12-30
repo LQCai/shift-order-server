@@ -87,6 +87,7 @@ public class ShiftTemplateServiceImpl extends BaseServiceImpl<ShiftTemplateMappe
 												setStartTime(startTime);
 												setCreateTime(new Date());
 												setBindKey(lineKey);
+												setBindKeySort(key);
 												setStatus(BladeConstant.DB_STATUS_NORMAL);
 											}});
 										}

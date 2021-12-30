@@ -26,6 +26,7 @@ import org.springblade.core.mp.support.Condition;
 import org.springblade.core.mp.support.Query;
 import org.springblade.core.secure.BladeUser;
 import org.springblade.core.tool.api.R;
+import org.springblade.core.tool.utils.DateUtil;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -33,7 +34,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * Create on 2021-12-25
@@ -116,5 +121,53 @@ public class OrderController {
             BladeUser bladeUser
     ) {
         return R.status(orderService.cancel(shiftOrderDetailId, bladeUser.getUserId()));
+    }
+
+    /**
+     * 时刻列表
+     */
+    @GetMapping("/interval-start-list")
+    @ApiOperationSupport(order = 1)
+    @ApiOperation(value = "时刻列表")
+    public R<List<Map<String, Object>>> intervalStartList() {
+        List<ShiftTemplate> list = shiftTemplateService.list(Wrappers.<ShiftTemplate>lambdaQuery()
+                .orderByAsc(ShiftTemplate::getStartTime)
+                .orderByAsc(ShiftTemplate::getBindKeySort)
+        );
+
+        List<ShiftTemplate> dataList = new ArrayList<>();
+        for (ShiftTemplate shiftTemplate : list) {
+            List<String> bindKeyList = dataList.stream().map(ShiftTemplate::getBindKey).collect(Collectors.toList());
+            if (!bindKeyList.contains(shiftTemplate.getBindKey())) {
+                dataList.add(shiftTemplate);
+                continue;
+            }
+            for (ShiftTemplate item : dataList) {
+                if (shiftTemplate.getBindKey().equals(item.getBindKey())) {
+                    if (shiftTemplate.getBindKeySort() < item.getBindKeySort()) {
+                        dataList.remove(item);
+                        dataList.add(shiftTemplate);
+                        break;
+                    }
+                }
+            }
+        }
+
+        List<Interval> intervalList = intervalService.list();
+
+        List<Map<String, Object>> resultList = new ArrayList<>();
+        for (ShiftTemplate shiftTemplate : dataList) {
+            for (Interval interval : intervalList) {
+                if (interval.getId().equals(shiftTemplate.getIntervalId())) {
+                    resultList.add(new HashMap<String, Object>() {{
+                        put("id", shiftTemplate.getId());
+                        put("key", shiftTemplate.getBindKey());
+                        put("value", DateUtil.format(shiftTemplate.getStartTime(), "HH:mm"));
+                    }});
+                }
+            }
+        }
+
+        return R.data(resultList);
     }
 }

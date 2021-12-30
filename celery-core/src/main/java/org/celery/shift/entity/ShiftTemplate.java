@@ -51,6 +51,11 @@ public class ShiftTemplate extends BaseEntity {
     @ApiModelProperty(value = "关联键")
     private String bindKey;
     /**
+     * 关联键顺序（用于表示一轮中的第几个）
+     */
+    @ApiModelProperty(value = "关联键顺序")
+    private Integer bindKeySort;
+    /**
      * 开始时间
      */
     @DateTimeFormat(pattern = "HH:mm:00")
