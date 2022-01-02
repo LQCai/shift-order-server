@@ -76,6 +76,11 @@ public class ShiftOrder extends BaseEntity {
     @ApiModelProperty(value = "负责人（班车司机）")
     private Long principal;
     /**
+     * 班次关联键（用于绑定班车司机一轮循环）
+     */
+    @ApiModelProperty(value = "班次关联键")
+    private String shiftBindKey;
+    /**
      * 车型
      */
     @ApiModelProperty(value = "车型")

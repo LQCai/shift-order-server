@@ -63,6 +63,7 @@ public class OrderServiceImpl implements OrderService {
                     setIntervalId(shiftTemplate.getIntervalId());
                     setAllOrderCount(1);
                     setActiveOrderCount(1);
+                    setShiftBindKey(shiftTemplate.getBindKey());
                 }};
                 shiftOrderService.save(shiftOrder);
             } else {
