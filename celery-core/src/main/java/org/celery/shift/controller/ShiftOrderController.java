@@ -55,9 +55,11 @@ public class ShiftOrderController extends BladeController {
 	@ApiOperation(value = "分页", notes = "传入shiftOrder")
 	public R<IPage<ShiftOrderVO>> list(ShiftOrder shiftOrder, Query query) {
 		QueryWrapper<ShiftOrder> queryWrapper = Condition.getQueryWrapper(shiftOrder);
-		if (shiftOrder.getShiftBindKey().equals("")) {
+		if (!Func.isNull(shiftOrder.getShiftBindKey()) && shiftOrder.getShiftBindKey().equals("")) {
 			shiftOrder.setShiftBindKey(null);
 		}
+		queryWrapper.lambda().orderByDesc(ShiftOrder::getDate);
+		queryWrapper.lambda().orderByAsc(ShiftOrder::getStartTime);
 		IPage<ShiftOrder> pages = shiftOrderService.page(Condition.getPage(query), queryWrapper);
 		return R.data(ShiftOrderWrapper.build().pageVO(pages));
 	}
