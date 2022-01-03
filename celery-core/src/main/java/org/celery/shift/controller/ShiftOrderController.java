@@ -1,5 +1,6 @@
 package org.celery.shift.controller;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import io.swagger.annotations.Api;
 
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -53,7 +54,11 @@ public class ShiftOrderController extends BladeController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "分页", notes = "传入shiftOrder")
 	public R<IPage<ShiftOrderVO>> list(ShiftOrder shiftOrder, Query query) {
-		IPage<ShiftOrder> pages = shiftOrderService.page(Condition.getPage(query), Condition.getQueryWrapper(shiftOrder));
+		QueryWrapper<ShiftOrder> queryWrapper = Condition.getQueryWrapper(shiftOrder);
+		if (shiftOrder.getShiftBindKey().equals("")) {
+			shiftOrder.setShiftBindKey(null);
+		}
+		IPage<ShiftOrder> pages = shiftOrderService.page(Condition.getPage(query), queryWrapper);
 		return R.data(ShiftOrderWrapper.build().pageVO(pages));
 	}
 
