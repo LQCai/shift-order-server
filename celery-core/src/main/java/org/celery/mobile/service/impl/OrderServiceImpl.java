@@ -11,11 +11,13 @@ import org.celery.shift.service.IShiftOrderDetailService;
 import org.celery.shift.service.IShiftOrderService;
 import org.celery.shift.service.IShiftTemplateService;
 import org.springblade.core.log.exception.ServiceException;
+import org.springblade.core.tool.utils.DateUtil;
 import org.springblade.core.tool.utils.Func;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 
 /**
@@ -90,6 +92,8 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public Boolean cancel(Long shiftOrderDetailId, Long userId) {
+        Date now = DateUtil.now();
+
         ShiftOrderDetail shiftOrderDetail = shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
                 .eq(ShiftOrderDetail::getId, shiftOrderDetailId)
                 .eq(ShiftOrderDetail::getOrderUserId, userId)
@@ -97,6 +101,12 @@ public class OrderServiceImpl implements OrderService {
         );
         if (Func.isEmpty(shiftOrderDetail)) {
             throw new ServiceException("您尚未预约");
+        }
+
+        String dateString = DateUtil.formatDate(shiftOrderDetail.getDate()) + " " + DateUtil.formatTime(shiftOrderDetail.getStartTime());
+        Date date = DateUtil.parse(dateString, DateUtil.PATTERN_DATETIME);
+        if (now.after(date)) {
+            throw new ServiceException("已超过发车时间，不可取消!");
         }
 
         synchronized (ShiftOrder.class) {
