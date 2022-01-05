@@ -5,6 +5,8 @@ import org.celery.shift.vo.ShiftOrderDetailVO;
 import org.springblade.core.mp.base.BaseService;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 
+import java.util.List;
+
 /**
  * 班车预约详情表 服务类
  *
@@ -22,4 +24,5 @@ public interface IShiftOrderDetailService extends BaseService<ShiftOrderDetail> 
 	 */
 	IPage<ShiftOrderDetailVO> selectShiftOrderDetailPage(IPage<ShiftOrderDetailVO> page, ShiftOrderDetailVO shiftOrderDetail);
 
+	boolean deleteByIds(List<Long> ids);
 }
