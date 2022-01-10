@@ -162,7 +162,7 @@ public class OrderController {
                     resultList.add(new HashMap<String, Object>() {{
                         put("id", shiftTemplate.getId());
                         put("key", shiftTemplate.getBindKey());
-                        put("value", DateUtil.format(shiftTemplate.getStartTime(), "HH:mm"));
+                        put("value", DateUtil.format(shiftTemplate.getStartTime(), "HH:mm") + " (" + interval.getName() + ")");
                     }});
                 }
             }
