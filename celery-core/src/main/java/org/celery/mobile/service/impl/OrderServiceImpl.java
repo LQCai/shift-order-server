@@ -13,6 +13,8 @@ import org.celery.shift.service.IShiftTemplateService;
 import org.springblade.core.log.exception.ServiceException;
 import org.springblade.core.tool.utils.DateUtil;
 import org.springblade.core.tool.utils.Func;
+import org.springblade.modules.system.entity.Param;
+import org.springblade.modules.system.service.IParamService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,6 +34,7 @@ public class OrderServiceImpl implements OrderService {
     private final IShiftTemplateService shiftTemplateService;
     private final IShiftOrderService shiftOrderService;
     private final IShiftOrderDetailService shiftOrderDetailService;
+    private final IParamService paramService;
 
     @Override
     @Transactional
@@ -41,6 +44,19 @@ public class OrderServiceImpl implements OrderService {
         );
             if (Func.isEmpty(shiftTemplate)) {
             throw new ServiceException("预约班次不存在");
+        }
+
+        Date now = DateUtil.now();
+        Param param = paramService.getOne(Wrappers.<Param>lambdaQuery()
+                .eq(Param::getParamKey, "time.limit")
+        );
+        if (Func.isEmpty(param)) {
+            throw new ServiceException("后台参数配置错误，请联系管理员");
+        }
+
+        int limitTime = Integer.parseInt(param.getParamValue());
+        if (DateUtil.plusHours(now, limitTime).after(DateUtil.toDate(date))) {
+            throw new ServiceException("离发车时间超过" + limitTime + "小时, 不可预约!");
         }
 
         if (Func.isNotEmpty(shiftOrderDetailService.getOne(Wrappers.<ShiftOrderDetail>lambdaQuery()
