@@ -23,4 +23,5 @@ public interface ShiftOrderDetailMapper extends BaseMapper<ShiftOrderDetail> {
 	 */
 	List<ShiftOrderDetailVO> selectShiftOrderDetailPage(IPage page, ShiftOrderDetailVO shiftOrderDetail);
 
+	void deleteByIds(List<Long> ids);
 }

@@ -26,4 +26,12 @@
         select * from c_shift_order where is_deleted = 0
     </select>
 
+    <delete id="deleteByIds" parameterType="List">
+        delete from c_shift_order
+        where id in
+        <foreach collection="list" open="(" separator="," close=")" item="ids">
+            #{ids}
+        </foreach>
+    </delete>
+
 </mapper>
