@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 @Component
 @Slf4j
 public class CleanDataTask {
-    @Scheduled(cron = "0 * * * * ?")
+    @Scheduled(cron = "0 0 0 * * ?")
     public void task () {
         IShiftOrderService shiftOrderService = SpringUtil.getBean(IShiftOrderService.class);
         IShiftOrderDetailService shiftOrderDetailService = SpringUtil.getBean(IShiftOrderDetailService.class);
