@@ -69,6 +69,7 @@ public class OrderServiceImpl implements OrderService {
             } else {
                 shiftOrder.setAllOrderCount(shiftOrder.getAllOrderCount() + 1);
                 shiftOrder.setActiveOrderCount(shiftOrder.getActiveOrderCount() + 1);
+                shiftOrderService.saveOrUpdate(shiftOrder);
             }
 
             ShiftOrder finalShiftOrder = shiftOrder;
