@@ -54,8 +54,11 @@ public class OrderServiceImpl implements OrderService {
             throw new ServiceException("后台参数配置错误，请联系管理员");
         }
 
+        String dateString = DateUtil.formatDate(DateUtil.toDate(date)) + " " + DateUtil.formatTime(shiftTemplate.getStartTime());
+        Date dateTime = DateUtil.parse(dateString, DateUtil.PATTERN_DATETIME);
+
         int limitTime = Integer.parseInt(param.getParamValue());
-        if (DateUtil.plusHours(now, limitTime).after(DateUtil.toDate(date))) {
+        if (DateUtil.plusHours(now, limitTime).after(dateTime)) {
             throw new ServiceException("离发车时间超过" + limitTime + "小时, 不可预约!");
         }
 
